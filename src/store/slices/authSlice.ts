@@ -46,8 +46,18 @@ export const authSlice = createSlice({
             state.user = null;
             state.role = null;
             localStorage.removeItem('token');
-        }
+        },
     },
+
+    extraReducers: (builder) => {
+        builder.addCase(login.fulfilled, (state, action) => {
+            state.token = action.payload.token;
+            state.user = action.payload.user;
+            state.role = action.payload.role;
+
+            localStorage.setItem('token', action.payload.token);
+        })
+    }
 })
 
 export const { logout } = authSlice.actions;
