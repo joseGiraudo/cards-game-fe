@@ -1,10 +1,12 @@
+import { BrowserRouter } from "react-router-dom"
+import AppRoutes from "./routes/AppRoutes"
 
 function App() {
 
   return (
-    <>
-      <h3>Cards Game Frontend</h3>
-    </>
+     <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
   )
 }
 
