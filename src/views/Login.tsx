@@ -1,9 +1,11 @@
 import { useDispatch } from "react-redux";
 import { useAuth } from "../hooks/useAuth";
 import React, { useEffect, useState } from "react";
-import { login } from "../store/slices/authSlice";
 import { Box, Button, Container, Paper, TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { login } from "../store/slices/authSlice";
+import type { AppDispatch } from '../store/store';
+
 
 
 
@@ -12,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 const Login = () => {
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
 
