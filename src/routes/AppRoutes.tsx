@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth"
 import Login from "../views/Login";
 import Home from "../views/Home";
-import Layout from '../components/Layout';
+import Layout from '../components/Layout'; 
 
 
 
