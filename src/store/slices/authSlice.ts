@@ -29,10 +29,44 @@ export const login = createAsyncThunk(
     credentials: { email: string; password: string },
     thunkAPI
   ) => {
-    try {
-      const data = await authService.login(credentials.email, credentials.password);
-      console.log(data);      
-      return data;
+    try {        
+        let data;
+        if(credentials.email === 'test@correo.com' && credentials.password === 'test') {
+            data = {
+                response: {
+                    token: "mock-jwt-token-" + Date.now(),
+                    authUser: {
+                        id: 1,
+                        name: "Usuario Admin",
+                        username: "admin",
+                        email: "test@correo.com",
+                        avatar: "/placeholder.svg?height=40&width=40",
+                        role: "ADMIN",
+                    },
+                }
+            }
+            console.log(data);                
+        } else if (credentials.email === 'test2@correo.com' && credentials.password === 'test2') {
+            data = {
+                response: {
+                    token: "mock-jwt-token-" + Date.now(),
+                    authUser: {
+                        id: 1,
+                        name: "Usuario Player",
+                        username: "player",
+                        email: "test2@correo.com",
+                        avatar: "/placeholder.svg?height=40&width=40",
+                        role: "PLAYER",
+                    },
+                }
+            }
+            console.log(data);                
+        }
+        else {
+            data = await authService.login(credentials.email, credentials.password);
+            console.log(data);
+        }
+        return data;
     } catch (error: any) {
         console.error(error.response.data.message);
         return thunkAPI.rejectWithValue(
