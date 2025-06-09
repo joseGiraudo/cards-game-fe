@@ -32,7 +32,7 @@ const Register = () => {
     username: "",
     email: "",
     password: "",
-    countryId: 0,
+    countryId: "",
     avatar: "",
   })
   const [loading, setLoading] = useState(false)
