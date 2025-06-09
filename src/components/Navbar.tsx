@@ -15,7 +15,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../store/store';
 
-const pages = ['Products', 'Pricing', 'Blog'];
+const pages = ['Tournaments', 'Cards', 'Users'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const Navbar = () => {

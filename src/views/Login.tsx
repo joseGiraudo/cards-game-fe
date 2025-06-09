@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { useAuth } from "../hooks/useAuth";
 import React, { useEffect, useState } from "react";
-import { Box, Button, Container, Paper, TextField, Typography } from "@mui/material";
+import { Box, Button, Container, Link, Paper, TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { login } from "../store/slices/authSlice";
 import type { AppDispatch } from '../store/store';
@@ -63,6 +63,9 @@ const Login = () => {
                     <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
                         Iniciar sesión
                     </Button>
+                    <Link variant="body2" underline="none" href="/register" sx={{ mt: 2, display: 'block', textAlign:'center' }}>
+                        Registrarse
+                    </Link>
                 </Box>
             </Paper>
         </Container>
