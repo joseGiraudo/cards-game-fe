@@ -109,10 +109,17 @@ const Register = () => {
       const result = await registerPlayer(registrationData)
       setSuccess("Registro completado exitosamente")
       console.log("result: ", result)
-    } catch (err) {
-      setError("Error inesperado. Por favor, intenta nuevamente.")
-      console.error("Registration error:", err)
-    } finally {
+
+    } 
+    catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError("Error inesperado. Por favor, intenta nuevamente.")
+      }
+      console.error("error en el registro:", err)
+    } 
+    finally {
       setLoading(false)
     }
   }
