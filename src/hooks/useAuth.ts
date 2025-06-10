@@ -4,12 +4,13 @@ import type { RootState } from "../store/store"
 
 export const useAuth = () => {
 
-    const { token, user, role } = useSelector((state: RootState) => state.auth);
+    const { token, user, loading, error } = useSelector((state: RootState) => state.auth);
 
     return {
         isAuthenticated: !!token,
         token,
         user,
-        role,
+        loading,
+        error,
     }
 }

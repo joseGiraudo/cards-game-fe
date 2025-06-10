@@ -26,3 +26,11 @@ export const registerPlayer = async (playerData: UserDTO): Promise<User> => {
 
   return response.data;
 }
+
+export const createUser = async (userData: UserDTO): Promise<User> => {
+  
+  const response = await api.post<User>('/users', userData);
+  
+  console.log("Registro de usuario: ", response);
+  return response.data;
+}

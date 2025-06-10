@@ -1,15 +1,10 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useAuth } from "../hooks/useAuth";
 import React, { useEffect, useState } from "react";
-import { Box, Button, Container, Link, Paper, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Container, Link, Paper, TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { login } from "../store/slices/authSlice";
-import type { AppDispatch } from '../store/store';
-
-
-
-
-
+import { clearError, login } from "../store/slices/authSlice";
+import type { AppDispatch, RootState } from '../store/store';
 
 
 const Login = () => {
@@ -17,6 +12,9 @@ const Login = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
+    
+    // Obtener loading y error del estado de Redux
+    const { loading, error } = useSelector((state: RootState) => state.auth)
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -27,9 +25,27 @@ const Login = () => {
         }
     }, [isAuthenticated, navigate]);
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        dispatch(login({email, password}))
+
+        //Limpio errores (x las dudas)
+        dispatch(clearError());
+
+        try {
+            // Dispatch del login action
+            const result = await dispatch(login({ email, password }))
+            // Verificar si el login fue exitoso
+            if (login.fulfilled.match(result)) {
+                // Opcional: limpiar el formulario
+                setEmail("")
+                setPassword("")
+                // La redirección se maneja automáticamente por el useEffect
+                // cuando isAuthenticated cambie a true
+            } 
+        } catch (error) {
+            // Los errores se manejan automáticamente en el slice de Redux
+            console.error("Login failed:", error)
+        }
     }
 
 
@@ -39,6 +55,12 @@ const Login = () => {
                 <Typography variant="h5" gutterBottom>
                     Iniciar Sesión
                 </Typography>
+
+                {error && (
+                    <Alert severity="error" sx={{ mb: 2 }} onClose={() => dispatch(clearError())}>
+                        {error}
+                    </Alert>
+                )}
 
                 <Box component="form" onSubmit={handleSubmit} >
 
@@ -60,8 +82,8 @@ const Login = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
-                    <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
-                        Iniciar sesión
+                    <Button type="submit" disabled={loading} variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+                        {loading ? "Iniciando sesión..." : "Iniciar sesión"}
                     </Button>
                     <Link variant="body2" underline="none" href="/register" sx={{ mt: 2, display: 'block', textAlign:'center' }}>
                         Registrarse
