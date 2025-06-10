@@ -1,4 +1,4 @@
-import type { AssignCardDTO, Card, CreateDeckDTO } from "../models/card";
+import type { AssignCardDTO, Card, CreateDeckDTO, Deck } from "../models/card";
 import { handleApiError } from "../utils/handleApiError";
 import api from "./api"
 
@@ -48,10 +48,20 @@ export const createCard = async (CardData: Card): Promise<Card> => {
 export const getPlayerCollection = async (playerId: number): Promise<Card[]> => {
 
   try {
-    const response = await api.get<Card[]>(`/player-cards/${playerId}/collection`)
+    const response = await api.get<Card[]>(`/decks/${playerId}/collection`)
     return response.data
   } catch (error) {
     throw handleApiError(error, "error al obtener la coleccion de cartas");    
+  }
+}
+
+export const getPlayerDecks = async (): Promise<Deck[]> => {
+
+  try {
+    const response = await api.get<Deck[]>(`/decks`)
+    return response.data
+  } catch (error) {
+    throw handleApiError(error, "error al obtener los mazos del jugador");    
   }
 }
 
@@ -60,7 +70,7 @@ export const getPlayerCollection = async (playerId: number): Promise<Card[]> => 
 export const createDeck = async (deckData: CreateDeckDTO): Promise<void> => {
 
   try {
-    await api.post('/player-cards', deckData)
+    await api.post('/decks', deckData)
   } catch (error) {
     throw handleApiError(error, 'Error al crear el mazo')
   }
@@ -71,7 +81,7 @@ export const createDeck = async (deckData: CreateDeckDTO): Promise<void> => {
 export const assignCardsToDeck = async (deckId: number, cardDTO: AssignCardDTO): Promise<string> => {
 
   try {
-    const response = await api.post(`/player-cards/${deckId}/assign`, cardDTO)
+    const response = await api.post(`/decks/${deckId}/assign`, cardDTO)
     
     return response.data
   } catch (error) {

@@ -12,9 +12,10 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../store/store';
 import { useNavigate } from 'react-router-dom';
+import { logout } from '../store/slices/authSlice';
 
 const pages = [
   { label: 'Tournaments', path: '/tournaments' },
@@ -22,11 +23,10 @@ const pages = [
   { label: 'Users', path: '/users' }
 ];
 
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Decks', 'Logout'];
 
 const Navbar = () => {
 
-  const navigate = useNavigate();
 
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -48,7 +48,15 @@ const Navbar = () => {
   };
 
 
+  const navigate = useNavigate();
   const { user } = useSelector((state: RootState) => state.auth)
+  const dispatch = useDispatch();
+
+  // manejo del logout
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/login');
+  };
 
 
   return (
@@ -126,7 +134,7 @@ const Navbar = () => {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            Cards Game Tournament
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
@@ -165,7 +173,17 @@ const Navbar = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting}
+                  onClick={() => {
+                    handleCloseUserMenu();
+                    if (setting === 'Logout') {
+                      handleLogout();
+                    } else {
+                      // Opcional: navegar o manejar otros settings
+                    }
+                  }}
+                >
                   <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
                 </MenuItem>
               ))}

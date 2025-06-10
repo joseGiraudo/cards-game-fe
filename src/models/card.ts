@@ -5,7 +5,7 @@ export interface Card {
     name: string;
     attack: number;
     defense: number;
-    illustration: number;
+    illustration: string;
 }
 
 

@@ -7,6 +7,9 @@ import Register from "../views/Register";
 import UserList from "../views/users/UserList";
 import UserForm from "../views/users/UserForm";
 import NotFound from "../views/NotFound";
+import CardList from "../views/cards/CardList";
+import DeckForm from "../views/cards/DeckForm";
+import DeckList from "../views/cards/DeckList";
 
 
 
@@ -32,6 +35,13 @@ const AppRoutes = () => {
 
                     {/* Chequear el rol. debe ser admin o organizador  */}
                     <Route path="/users/new" element={ <UserForm /> } />
+
+
+                    <Route path="/decks/new" element={ <DeckForm /> } />
+                    <Route path="/decks" element={ <DeckList /> } />
+
+                    <Route path="/cards" element={ <CardList /> } />
+
 
                     <Route path="*" element={ <NotFound /> } />
 

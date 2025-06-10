@@ -1,107 +1,126 @@
-import React, { useEffect, useState, type ChangeEvent } from 'react'
-import { getCountries, type Country } from '../../services/countryService'
-import { Alert, Box, Button, Card, CardContent, CircularProgress, Container, FormControl, FormHelperText, Grid, InputLabel, Link, MenuItem, Select, TextField, Typography, type SelectChangeEvent } from '@mui/material'
-import type { UserDTO } from '../../models/user'
-import * as userService from '../../services/userService'
-import { useSelector } from 'react-redux'
-import type { RootState } from '../../store/store'
-
+import React, { useEffect, useState, type ChangeEvent } from "react";
+import { getCountries, type Country } from "../../services/countryService";
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CircularProgress,
+  Container,
+  FormControl,
+  FormHelperText,
+  Grid,
+  InputLabel,
+  Link,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+  type SelectChangeEvent,
+} from "@mui/material";
+import type { UserDTO } from "../../models/user";
+import * as userService from "../../services/userService";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../store/store";
 
 const roles = [
-    { id: 1, name: 'Admin' },
-    { id: 2, name: 'Organizador' },
-    { id: 3, name: 'Juez' },
-    { id: 4, name: 'Jugador' }
-  ];
-
+  { id: 1, name: "Admin" },
+  { id: 2, name: "Organizador" },
+  { id: 3, name: "Juez" },
+  { id: 4, name: "Jugador" },
+];
 
 const UserForm = () => {
+  const { user } = useSelector((state: RootState) => state.auth);
 
-    const { user } = useSelector((state: RootState) => state.auth)
+  const [formData, setFormData] = useState({
+    name: "",
+    username: "",
+    email: "",
+    password: "",
+    role: 4,
+    countryId: 1,
+    avatar: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [countries, setCountries] = useState<Country[]>([]);
 
-    const [formData, setFormData] = useState({
-        name: "",
-        username: "",
-        email: "",
-        password: "",
-        role: 4,
-        countryId: 1,
-        avatar: "",
-    })
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState<string | null>(null)
-    const [success, setSuccess] = useState<string | null>(null)
-    const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
-    const [countries, setCountries] = useState<Country[]>([])
+  useEffect(() => {
+    setCountries(getCountries());
+  }, []);
 
-    useEffect(() => {
-    setCountries(getCountries())
-    }, [])
-
-    const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<number>) => {
-    const { name, value } = event.target
+  const handleChange = (
+    event:
+      | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | SelectChangeEvent<number>
+  ) => {
+    const { name, value } = event.target;
     setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-    }))
+      ...prev,
+      [name]: value,
+    }));
 
     // Limpiar el error del campo modificado
     setFieldErrors((prevErrors) => {
-        const updatedErrors = { ...prevErrors };
-        delete updatedErrors[name];
-        return updatedErrors;
+      const updatedErrors = { ...prevErrors };
+      delete updatedErrors[name];
+      return updatedErrors;
     });
-    }
+  };
 
-    const validateForm = (): boolean => {
-    const errors: Record<string, string> = {}
+  const validateForm = (): boolean => {
+    const errors: Record<string, string> = {};
 
     if (!formData.name.trim()) {
-        errors.name = "El nombre es requerido"
+      errors.name = "El nombre es requerido";
     }
 
     if (!formData.username.trim()) {
-        errors.username = "El nombre de usuario es requerido"
+      errors.username = "El nombre de usuario es requerido";
     } else if (formData.username.length < 3) {
-        errors.username = "El nombre de usuario debe tener al menos 3 caracteres"
+      errors.username = "El nombre de usuario debe tener al menos 3 caracteres";
     }
 
     if (!formData.email.trim()) {
-        errors.email = "El email es requerido"
+      errors.email = "El email es requerido";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-        errors.email = "Ingresa un email válido"
+      errors.email = "Ingresa un email válido";
     }
 
     if (!formData.password) {
-        errors.password = "La contraseña es requerida"
+      errors.password = "La contraseña es requerida";
     } else if (formData.password.length < 6) {
-        errors.password = "La contraseña debe tener al menos 6 caracteres"
+      errors.password = "La contraseña debe tener al menos 6 caracteres";
     }
 
     if (user?.role === 2 && formData.role !== 3) {
-        errors.role = "Los organizadores solo pueden crear jueces";
+      errors.role = "Los organizadores solo pueden crear jueces";
     } else if (user?.role !== 1 && user?.role !== 2) {
-        errors.role = "No tienes permisos para crear usuarios";
+      errors.role = "No tienes permisos para crear usuarios";
     }
 
-    setFieldErrors(errors)
-        return Object.keys(errors).length === 0
-    }
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
-    const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault()
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
 
     if (!validateForm()) {
-        return
+      return;
     }
 
-    setLoading(true)
-    setError(null)
-    setSuccess(null)
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
 
     try {
-        // Preparar los datos para enviar al backend ASP.NET
-        const registrationData: UserDTO = {
+      // Preparar los datos para enviar al backend ASP.NET
+      const registrationData: UserDTO = {
         name: formData.name,
         username: formData.username,
         email: formData.email,
@@ -109,21 +128,19 @@ const UserForm = () => {
         role: formData.role,
         countryId: formData.countryId,
         avatar: formData.avatar,
-        }
+      };
 
-        // Usar el service para registrar el jugador
-        const result = await userService.createUser(registrationData)
-        setSuccess("Registro completado exitosamente")
-        console.log("result: ", result)
+      // Usar el service para registrar el jugador
+      const result = await userService.createUser(registrationData);
+      setSuccess("Registro completado exitosamente");
+      console.log("result: ", result);
     } catch (err) {
-        setError("Error inesperado. Por favor, intenta nuevamente.")
-        console.error("Registration error:", err)
+      setError("Error inesperado. Por favor, intenta nuevamente.");
+      console.error("Registration error:", err);
     } finally {
-        setLoading(false)
+      setLoading(false);
     }
-    }
-
-
+  };
 
   return (
     <Container maxWidth="sm" sx={{ py: 4 }}>
@@ -149,15 +166,15 @@ const UserForm = () => {
 
           <Box component="form" onSubmit={handleSubmit}>
             <TextField
-            fullWidth
-            label="Nombre"
-            value={formData.name}
-            name="name"
-            onChange={handleChange}
-            error={!!fieldErrors.name}
-            helperText={fieldErrors.name}
-            disabled={loading}
-            margin="normal"
+              fullWidth
+              label="Nombre"
+              value={formData.name}
+              name="name"
+              onChange={handleChange}
+              error={!!fieldErrors.name}
+              helperText={fieldErrors.name}
+              disabled={loading}
+              margin="normal"
             />
 
             <TextField
@@ -198,7 +215,12 @@ const UserForm = () => {
               disabled={loading}
             />
 
-            <FormControl fullWidth margin="normal" error={!!fieldErrors.role} disabled={loading}>
+            <FormControl
+              fullWidth
+              margin="normal"
+              error={!!fieldErrors.role}
+              disabled={loading}
+            >
               <InputLabel id="role-select-label">Rol</InputLabel>
               <Select
                 labelId="role-select-label"
@@ -215,9 +237,9 @@ const UserForm = () => {
                   </MenuItem>
                 ))}
               </Select>
-            {fieldErrors.role && (
+              {fieldErrors.role && (
                 <FormHelperText>{fieldErrors.role}</FormHelperText>
-            )}
+              )}
             </FormControl>
 
             <FormControl fullWidth margin="normal">
@@ -260,7 +282,7 @@ const UserForm = () => {
         </CardContent>
       </Card>
     </Container>
-  )
-}
+  );
+};
 
-export default UserForm
+export default UserForm;
