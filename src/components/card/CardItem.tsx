@@ -40,10 +40,10 @@ const CardItem: React.FC<Props> = ({ card }) => {
         </Typography>
         <Box display="flex" justifyContent="space-between" px={1}>
           <Typography variant="body2" color="text.secondary">
-            🗡️ Ataque: {card.attack}
+            Ataque: {card.attack}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            🛡️ Defensa: {card.defense}
+            Defensa: {card.defense}
           </Typography>
         </Box>
       </CardContent>
