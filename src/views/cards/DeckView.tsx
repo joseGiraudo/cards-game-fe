@@ -4,6 +4,21 @@ import type { AssignCardDTO, Card, Deck } from '../../models/card';
 import * as cardService from '../../services/cardService';
 import { Alert, Box, Button, Checkbox, CircularProgress, FormControlLabel, Grid, Typography, Paper, Divider } from '@mui/material';
 import CardItem from '../../components/card/CardItem';
+import ConfirmDialog from '../../components/ConfirmDialog';
+
+
+
+type DialogMode = 'confirm' | 'success' | 'alert' | 'error';
+
+interface ConfirmDialogState {
+  open: boolean;
+  mode: DialogMode;
+  title: string;
+  onSuccess?: () => void;
+}
+
+
+
 
 const DeckView = () => {
   const { deckId } = useParams();
@@ -19,10 +34,22 @@ const DeckView = () => {
   const [error, setError] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
+  
+  const [dialogProps, setDialogProps] = useState<ConfirmDialogState>({
+      open: false,
+      mode: 'alert',
+      title: '',
+  });
 
   useEffect(() => {
 
-    const fetchDeck = async () => {
+    fetchDeck();
+    fetchCards();
+
+    console.log(deck)
+  }, [deckId]);
+
+  const fetchDeck = async () => {
         if(deckId) {
             try {
             const data = await cardService.getPlayerDeckCards(deckId);
@@ -50,12 +77,6 @@ const DeckView = () => {
       }
     };
 
-    fetchDeck();
-    fetchCards();
-
-    console.log(deck)
-  }, [deckId]);
-
   const toggleSelection = (id: number) => {
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((cid) => cid !== id) : [...prev, id]
@@ -67,21 +88,39 @@ const DeckView = () => {
 
     if (selectedIds.length < 8 || selectedIds.length > 15) {
       setSubmitError('Seleccioná entre 8 y 15 cartas.');
+      openConfirmDialog('error', 'Selecciona entre 8 y 15 cartas')
       return;
     }
-
-    
 
     try {
       cardDTO.cardIds = selectedIds;
       await cardService.assignCardsToDeck(Number(deckId), cardDTO);
       setSuccess(true);
       setSubmitError(null);
+      openConfirmDialog('success', 'Cartas asignadas correctamente');
     } catch (err: unknown) {
-        console.error(err);
+      console.error(err);
       setSubmitError('No se pudieron asignar las cartas.');
+      openConfirmDialog('error', 'Error al asignar las cartas')
+    } finally {
+      fetchDeck();
     }
   };
+
+
+  // metodos para el dialog de confirmacion
+    const openConfirmDialog = (mode: DialogMode, title: string, onSuccess?: () => void ) => {
+        setDialogProps({
+            open: true,
+            mode,
+            title,
+            onSuccess,
+        });
+    };
+    const closeConfirmDialog = () => {
+        setDialogProps((prev) => ({ ...prev, open: false }));
+    };
+
 
   if (loading) return <CircularProgress />;
   if (error) return <Alert severity="error">{error}</Alert>;
@@ -158,6 +197,13 @@ const DeckView = () => {
           </Grid>
           )
         }
+
+        <ConfirmDialog
+            open= {dialogProps.open}
+            mode={dialogProps.mode}
+            title={dialogProps.title}
+            onClose={closeConfirmDialog}
+        />
 
     </Box>
   )

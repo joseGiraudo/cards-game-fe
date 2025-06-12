@@ -16,13 +16,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../store/store';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../store/slices/authSlice';
+import { useEffect, useState } from 'react';
 
-const pages = [
+const adminPages = [
+  { label: 'Cards', path: '/cards' },
+  { label: 'Users', path: '/users' },
   { label: 'Tournaments', path: '/tournaments' },
+];
+const userPages = [
   { label: 'Cards', path: '/cards' },
   { label: 'Decks', path: '/decks'},
-  { label: 'Users', path: '/users' }
+  { label: 'Tournaments', path: '/tournaments' },
 ];
+
 
 const settings = ['Profile', 'Decks', 'Logout'];
 
@@ -53,6 +59,17 @@ const Navbar = () => {
   const { user } = useSelector((state: RootState) => state.auth)
   const dispatch = useDispatch();
 
+  const [pages, setPages] = useState<{label: string, path: string}[]>([]);
+
+  useEffect(() => {
+    if (user?.role === 1) {
+      setPages(adminPages);
+    } else if (user?.role) {
+      setPages(userPages)
+    }
+  }, [user])
+  
+
   // manejo del logout
   const handleLogout = () => {
     dispatch(logout());
@@ -81,7 +98,7 @@ const Navbar = () => {
               cursor: 'pointer',
             }}
           >
-            LOGO
+            CGame
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -135,7 +152,7 @@ const Navbar = () => {
               textDecoration: 'none',
             }}
           >
-            Cards Game Tournament
+            Cards Game
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (

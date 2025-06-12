@@ -12,6 +12,7 @@ import DeckView from "../views/cards/DeckView";
 import ProtectedRoute from "./ProtectedRoute";
 import Unauthorized from "../views/core/Unauthorized";
 import AuthenticatedRoute from "./AuthenticatedRoute";
+import TournamentsView from "../views/TournamentsView";
 
 
 
@@ -41,7 +42,9 @@ const AppRoutes = () => {
                         <Route path="/decks/:deckId" element={ <DeckView /> } />
                         <Route path="/decks" element={ <DeckList /> } />
                     </Route>
+                    
                     <Route path="/cards" element={ <CardList /> } />
+                    <Route path="/tournaments" element={ <TournamentsView /> } />
 
                     <Route path="*" element={ <NotFound /> } />
 

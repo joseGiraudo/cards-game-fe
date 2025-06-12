@@ -4,10 +4,12 @@ import type { RootState } from '../../store/store'
 import type { CreateDeckDTO } from '../../models/card'
 import { Alert, Box, Button, Card, CardContent, CircularProgress, Container, TextField, Typography } from '@mui/material'
 import * as cardService from '../../services/cardService';
+import { useNavigate } from 'react-router-dom'
 
 
 const DeckForm = () => {
     const { user } = useSelector((state: RootState) => state.auth)
+    const navigate = useNavigate();
     
     const [formData, setFormData] = useState<CreateDeckDTO>({
         name: "",
@@ -63,6 +65,7 @@ const DeckForm = () => {
           console.error("Registration error:", err);
         } finally {
           setLoading(false);
+          navigate('/decks')
         }
       };
 
