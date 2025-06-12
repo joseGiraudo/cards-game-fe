@@ -85,9 +85,12 @@ const Login = () => {
                     <Button type="submit" disabled={loading} variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
                         {loading ? "Iniciando sesión..." : "Iniciar sesión"}
                     </Button>
-                    <Link variant="body2" underline="none" href="/register" sx={{ mt: 2, display: 'block', textAlign:'center' }}>
-                        Registrarse
-                    </Link>
+                    <Box sx={{ mt: 2, display: 'block', textAlign:'center' }}>
+                        <Typography variant="body2" sx={{my:1, color: 'gray'}}>¿Eres Nuevo?</Typography>
+                        <Link variant="body1" underline="none" href="/register">
+                            Registrarse
+                        </Link>
+                    </Box>
                 </Box>
             </Paper>
         </Container>
