@@ -5,6 +5,18 @@ import { Button, IconButton, Paper, Table, TableBody, TableCell, TableContainer,
 
 import { Delete, Edit, Visibility, PersonAdd } from '@mui/icons-material';
 import UserFormDialog from '../../components/user/UserFormDialog';
+import ConfirmDialog from '../../components/ConfirmDialog';
+
+
+type DialogMode = 'confirm' | 'success' | 'alert' | 'error';
+
+interface ConfirmDialogState {
+  open: boolean;
+  mode: DialogMode;
+  title: string;
+  onSuccess?: () => void;
+}
+
 
 
 const UserList = () => {
@@ -14,8 +26,17 @@ const UserList = () => {
 
     // useState para el Dialog con el form
     const [dialogMode, setDialogMode] = useState<"create" | "edit" | "view">("create");
-    const [openDialog, setOpenDialog] = useState(false);
+    const [openUserDialog, setOpenUserDialog] = useState(false);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const [userIdToDelete, setUserIdToDelete] = useState<number | null>(null);
+
+
+
+    const [dialogProps, setDialogProps] = useState<ConfirmDialogState>({
+        open: false,
+        mode: 'alert',
+        title: '',
+    });
 
     // useState de paginacion
     const [page, setPage] = useState(0);
@@ -40,31 +61,40 @@ const UserList = () => {
     const handleViewUser = (user: User) => {
         setSelectedUser(user);
         setDialogMode('view');
-        setOpenDialog(true);
+        setOpenUserDialog(true);
     };
 
     const handleAddUser = () => {
         setSelectedUser(null);
         setDialogMode('create');
-        setOpenDialog(true);
+        setOpenUserDialog(true);
     };
 
     const handleEditUser = (user: User) => {
         setSelectedUser(user);
         setDialogMode('edit');
-        setOpenDialog(true);
+        setOpenUserDialog(true);
     };
 
     const handleDeleteUser = async (id: number) => {
-        if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
-        try {
-            await userService.deleteUser(id);
-            fetchUsers();
-        } catch (error) {
-            console.error('Error eliminando usuario:', error);
-        }
-        }
+        setUserIdToDelete(id);
+        openConfirmDialog(
+            'confirm', '¿Eliminar Usuario?', deleteUser)
     };
+
+    const deleteUser = async () => {
+        if(userIdToDelete) {
+            try {
+                await userService.deleteUser(userIdToDelete);
+                fetchUsers();
+            } catch (error) {
+                console.error('Error eliminando usuario:', error);
+                openConfirmDialog('error', 'Error eliminando el usuario');
+            } finally {
+                setUserIdToDelete(null);
+            }
+        }
+    }
 
     const translateUserRole = (role: number) => {
         switch(role) {
@@ -80,6 +110,19 @@ const UserList = () => {
                 return 'Rol no admitido'
         }
     }
+
+    // metodo para abrir el dialog de confirmacion
+    const openConfirmDialog = (mode: DialogMode, title: string, onSuccess?: () => void ) => {
+        setDialogProps({
+            open: true,
+            mode,
+            title,
+            onSuccess,
+        });
+    };
+    const closeConfirmDialog = () => {
+        setDialogProps((prev) => ({ ...prev, open: false }));
+    };
 
 
 
@@ -161,13 +204,29 @@ const UserList = () => {
             />
         </Paper>
         
+
+        
         <UserFormDialog
-            open= {openDialog}
+            open= {openUserDialog}
             mode= {dialogMode}
-            onClose= {() => setOpenDialog(false)}
+            onClose= {() => setOpenUserDialog(false)}
             onSuccess= {fetchUsers}
             userToEdit= {selectedUser}
         />
+
+        
+        <ConfirmDialog
+            open= {dialogProps.open}
+            mode={dialogProps.mode}
+            title={dialogProps.title}
+            onClose={closeConfirmDialog}
+            onSuccess={() => {
+                dialogProps.onSuccess?.();
+                closeConfirmDialog();
+            }}
+        />
+        
+
     </>
   )
 }

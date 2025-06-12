@@ -11,7 +11,7 @@ const CardItem: React.FC<Props> = ({ card }) => {
     <MUICard
       sx={{
         width: 250,
-        m: 2,
+        mx:2,
         borderRadius: 4,
         boxShadow: 6,
         transition: 'transform 0.2s ease-in-out',

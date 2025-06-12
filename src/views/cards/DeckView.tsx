@@ -90,63 +90,74 @@ const DeckView = () => {
     <Box>
         <CardMUI elevation={3}>
             <CardContent>
-            <Typography variant="h6" gutterBottom>
-                {deck?.name}
-            </Typography>
-            <Grid container spacing={1}>
-                {deck?.cards.map((card) => (
-                <Grid size={{ xs:12, sm:6, md:4, lg:3}} key={card.id}>
-                    <CardItem card={card} />
-                </Grid>
-                ))}
-            </Grid>
+              <Typography variant="h6" gutterBottom>
+                  {deck?.name}
+              </Typography>
+              <Grid container spacing={1}>
+                  {deck?.cards.map((card) => (
+                  <Grid size={{ xs:12, sm:6, md:4, lg:3}} key={card.id}>
+                      <CardItem card={card} />
+                  </Grid>
+                  ))}
+              </Grid>
             </CardContent>
         </CardMUI>
 
 
-      {deck?.cards.length === 0 ? (
-        <>
-            <Typography variant="h5" gutterBottom>
-            Asignar Cartas al Mazo
-            </Typography>
+        {deck?.cards.length === 0 ? (
+          <Grid>
+              <Box sx={{m:2}}>
+                <Typography variant="h5" gutterBottom>
+                Asignar Cartas al Mazo
+                </Typography>
 
-            <Typography variant="body2" gutterBottom color="text.secondary">
-            Seleccioná entre 8 y 15 cartas para el mazo.
-            </Typography>
+                <Typography variant="body2" gutterBottom color="text.secondary">
+                Seleccioná entre 8 y 15 cartas para el mazo.
+                </Typography>
+              </Box>
 
-            {submitError && <Alert severity="error" sx={{ mb: 2 }}>{submitError}</Alert>}
-            {success && <Alert severity="success" sx={{ mb: 2 }}>Cartas asignadas exitosamente.</Alert>}
+              {submitError && <Alert severity="error" sx={{ mb: 2 }}>{submitError}</Alert>}
+              {success && <Alert severity="success" sx={{ mb: 2 }}>Cartas asignadas exitosamente.</Alert>}
 
-            <Grid container spacing={2}>
-                {cards.map((card) => (
-                    <Grid size={{ xs:12, sm:6, md:4, lg:3}} key={card.id}>
-                    <FormControlLabel
-                        control={
-                        <Checkbox
-                            checked={selectedIds.includes(card.id)}
-                            onChange={() => toggleSelection(card.id)}
+              <Grid container spacing={2} justifyContent="center">
+                  {cards.map((card) => (
+                      <Box display="flex" flexDirection="column" alignItems="center" sx={{my:1}}>
+                        <Box onClick={() => toggleSelection(card.id)} sx={{cursor: 'pointer'}}>
+                          <CardItem card={card} />
+                        </Box>
+                        <FormControlLabel
+                            control={
+                            <Checkbox
+                                checked={selectedIds.includes(card.id)}
+                                onChange={() => toggleSelection(card.id)}
+                            />
+                            }
+                            label={card.name}
                         />
-                        }
-                        label={card.name}
-                    />
-                    </Grid>
-                ))}
-            </Grid>
+                      </Box>
+                  ))}
+              </Grid>
 
-            <Box sx={{ mt: 3 }}>
-                <Button
-                    variant="contained"
-                    disabled={selectedIds.length < 8 || selectedIds.length > 15}
-                    onClick={handleSubmit}
-                >
-                    Guardar Selección ({selectedIds.length})
-                </Button>
-            </Box>
-        </>
-        ) : (
-        <Typography variant="body1" sx={{ mt: 2 }}>
-            Este mazo ya tiene cartas asignadas.
-        </Typography>
+              <Box sx={{ mt: 3 }}>
+                  <Button
+                      variant="contained"
+                      size='large'
+                      onClick={handleSubmit}
+                      sx={{
+                        position: 'fixed',
+                        bottom: 16,
+                        right: 16,
+                        zIndex: 1000,
+                      }}
+                  >
+                      Guardar Selección ({selectedIds.length})
+                  </Button>
+              </Box>
+          </Grid>
+          ) : (
+          <Typography variant="body1" sx={{ mt: 2 }}>
+              Este mazo ya tiene cartas asignadas.
+          </Typography>
         )}
 
     </Box>
