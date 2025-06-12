@@ -180,7 +180,7 @@ const UserList = () => {
                                 <IconButton color="secondary" onClick={() => handleEditUser(user)}>
                                     <Edit />
                                 </IconButton>
-                                {user.id !== 1 && (
+                                {user.role !== 1 && (
                                     <IconButton color="error" onClick={() => handleDeleteUser(user.id)}>
                                         <Delete />
                                     </IconButton>
