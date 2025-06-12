@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import type { AssignCardDTO, Card, Deck } from '../../models/card';
 import * as cardService from '../../services/cardService';
-import { Alert, Box, Button, Card as CardMUI, CardContent, Checkbox, CircularProgress, FormControlLabel, Grid, Typography } from '@mui/material';
+import { Alert, Box, Button, Card as CardMUI, CardContent, Checkbox, CircularProgress, FormControlLabel, Grid, Typography, CardHeader, Paper, Divider } from '@mui/material';
 import CardItem from '../../components/card/CardItem';
 
 const DeckView = () => {
@@ -88,23 +88,25 @@ const DeckView = () => {
 
   return (
     <Box>
-        <CardMUI elevation={3}>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                  {deck?.name}
-              </Typography>
+        <Paper elevation={3}>
+            <Box sx={{mx:4, my:2}}>
+              <Typography variant='h4' sx={{my:2}}>{deck?.name}</Typography>
+              <Typography variant='subtitle1' >{deck?.cards.length} Cartas</Typography>
+              <Divider />
+            </Box>
+            <Box>
               <Grid container spacing={1}>
                   {deck?.cards.map((card) => (
-                  <Grid size={{ xs:12, sm:6, md:4, lg:3}} key={card.id}>
+                  <Grid size={{ xs:12, sm:6, md:4, lg:3}} sx={{ my:2 }} key={card.id}>
                       <CardItem card={card} />
                   </Grid>
                   ))}
               </Grid>
-            </CardContent>
-        </CardMUI>
+            </Box>
+        </Paper>
 
 
-        {deck?.cards.length === 0 ? (
+        {deck?.cards.length === 0 && (
           <Grid>
               <Box sx={{m:2}}>
                 <Typography variant="h5" gutterBottom>
@@ -154,11 +156,8 @@ const DeckView = () => {
                   </Button>
               </Box>
           </Grid>
-          ) : (
-          <Typography variant="body1" sx={{ mt: 2 }}>
-              Este mazo ya tiene cartas asignadas.
-          </Typography>
-        )}
+          )
+        }
 
     </Box>
   )
