@@ -15,14 +15,17 @@ import {
   Container,
   FormControl,
   Grid,
+  IconButton,
+  InputAdornment,
   InputLabel,
   Link,
   MenuItem,
+  OutlinedInput,
   Select,
   TextField,
   Typography,
 } from "@mui/material"
-import { SportsEsports } from "@mui/icons-material"
+import { SportsEsports, Visibility, VisibilityOff } from "@mui/icons-material"
 import { type Country, getCountries } from "../../services/countryService"
 import type { SelectChangeEvent } from "@mui/material"
 
@@ -35,11 +38,12 @@ const Register = () => {
     countryId: 1,
     avatar: "",
   })
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
-  const [countries, setCountries] = useState<Country[]>([])
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [countries, setCountries] = useState<Country[]>([]);
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   useEffect(() => {
     setCountries(getCountries())
@@ -124,6 +128,11 @@ const Register = () => {
     }
   }
 
+
+  const handleClickShowPassword = () => {
+    setPasswordVisible(!passwordVisible)
+  }
+
   return (
     <Container maxWidth="sm" sx={{ py: 4 }}>
       <Card elevation={3}>
@@ -188,11 +197,11 @@ const Register = () => {
               margin="normal"
               disabled={loading}
             />
-
+{/* 
             <TextField
               fullWidth
               label="Contraseña"
-              type="password"
+              type={passwordVisible ? "text" : "password"}
               value={formData.password}
               name="password"
               onChange={handleChange}
@@ -200,7 +209,33 @@ const Register = () => {
               helperText={fieldErrors.password}
               margin="normal"
               disabled={loading}
-            />
+            /> */}
+            <FormControl margin="normal" fullWidth variant="outlined">
+              <InputLabel htmlFor="password">Contraseña</InputLabel>
+              <OutlinedInput
+                id="password"
+                type={passwordVisible ? 'text' : 'password'}
+                value={formData.password}
+                name="password"
+                onChange={handleChange}
+                error={!!fieldErrors.password}
+                disabled={loading}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label={
+                        passwordVisible ? 'hide the password' : 'display the password'
+                      }
+                      onClick={handleClickShowPassword}
+                      edge="end"
+                    >
+                      {passwordVisible ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password"
+              />
+            </FormControl>
 
             <FormControl fullWidth margin="normal">
               <InputLabel id="country-select-label">País</InputLabel>

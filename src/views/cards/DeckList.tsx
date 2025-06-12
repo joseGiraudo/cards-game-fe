@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import type { Deck } from '../../models/card';
 import * as cardService from '../../services/cardService';
-import { Alert, Box, Button, Card, CardContent, Container, Divider, Grid, Typography } from '@mui/material';
+import { Alert, Box, Button, Card, CardContent, Divider, Grid, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { AddCircleOutline, ViewCarousel } from '@mui/icons-material';
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import type { AssignCardDTO, Card, Deck } from '../../models/card';
 import * as cardService from '../../services/cardService';
-import { Alert, Box, Button, Card as CardMUI, CardContent, Checkbox, CircularProgress, FormControlLabel, Grid, Typography, CardHeader, Paper, Divider } from '@mui/material';
+import { Alert, Box, Button, Checkbox, CircularProgress, FormControlLabel, Grid, Typography, Paper, Divider } from '@mui/material';
 import CardItem from '../../components/card/CardItem';
 
 const DeckView = () => {

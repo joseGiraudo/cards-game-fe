@@ -1,8 +1,8 @@
 import { Route, Routes } from "react-router-dom";
-import Login from "../views/core/Login";
+import Login from "../views/users/Login";
 import Home from "../views/core/Home";
 import Layout from '../components/Layout'; 
-import Register from "../views/core/Register";
+import Register from "../views/users/Register";
 import UserList from "../views/users/UserList";
 import NotFound from "../views/core/NotFound";
 import CardList from "../views/cards/CardList";
