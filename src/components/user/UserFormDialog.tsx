@@ -102,10 +102,14 @@ const UserFormDialog: React.FC<UserFormDialogProps> = ({ open, mode, onClose, on
     const errors: Record<string, string> = {};
 
     if (!formData.name.trim()) errors.name = "El nombre es requerido";
+    
     if (!formData.username.trim()) errors.username = "El nombre de usuario es requerido";
     else if (formData.username.length < 3) errors.username = "Debe tener al menos 3 caracteres";
+    
     if (!formData.email.trim()) errors.email = "El email es requerido";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) errors.email = "Email inválido";
+    
+    if (!formData.avatar.trim()) errors.avatar = "La url de avatar es requerida";
 
     if (!userToEdit && !formData.password) errors.password = "La contraseña es requerida";
     else if (!userToEdit && formData.password.length < 6) errors.password = "Mínimo 6 caracteres";
@@ -206,18 +210,20 @@ const UserFormDialog: React.FC<UserFormDialogProps> = ({ open, mode, onClose, on
             disabled={mode === 'view' || mode === 'edit' || loading}
           />
 
-          <TextField
-            fullWidth
-            label="Contraseña"
-            name="password"
-            type="password"
-            value={formData.password}
-            onChange={handleChange}
-            error={!!fieldErrors.password}
-            helperText={fieldErrors.password}
-            margin="normal"
-            disabled={mode === 'view' || mode === 'edit' || loading}
-          />
+          {mode === 'create' && (
+            <TextField
+              fullWidth
+              label="Contraseña"
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+              error={!!fieldErrors.password}
+              helperText={fieldErrors.password}
+              margin="normal"
+              disabled={loading}
+            />
+          )}
 
           <FormControl fullWidth margin="normal" error={!!fieldErrors.role} disabled={loading}>
             <InputLabel id="role-label">Rol</InputLabel>
@@ -235,6 +241,19 @@ const UserFormDialog: React.FC<UserFormDialogProps> = ({ open, mode, onClose, on
             </Select>
             {fieldErrors.role && <FormHelperText>{fieldErrors.role}</FormHelperText>}
           </FormControl>
+
+          <TextField
+              fullWidth
+              label="Avatar URL"
+              name="avatar"
+              type="text"
+              value={formData.avatar}
+              onChange={handleChange}
+              error={!!fieldErrors.avatar}
+              helperText={fieldErrors.avatar}
+              margin="normal"
+              disabled={loading}
+            />
 
           <FormControl fullWidth margin="normal" disabled={loading}>
             <InputLabel id="country-label">País</InputLabel>
