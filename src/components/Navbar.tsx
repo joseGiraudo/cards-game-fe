@@ -20,6 +20,7 @@ import { logout } from '../store/slices/authSlice';
 const pages = [
   { label: 'Tournaments', path: '/tournaments' },
   { label: 'Cards', path: '/cards' },
+  { label: 'Decks', path: '/decks'},
   { label: 'Users', path: '/users' }
 ];
 

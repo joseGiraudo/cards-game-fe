@@ -1,54 +1,52 @@
-import { Navigate, Route, Routes } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth"
-import Login from "../views/Login";
-import Home from "../views/Home";
+import { Route, Routes } from "react-router-dom";
+import Login from "../views/core/Login";
+import Home from "../views/core/Home";
 import Layout from '../components/Layout'; 
-import Register from "../views/Register";
+import Register from "../views/core/Register";
 import UserList from "../views/users/UserList";
-import UserForm from "../views/users/UserForm";
-import NotFound from "../views/NotFound";
+import NotFound from "../views/core/NotFound";
 import CardList from "../views/cards/CardList";
 import DeckForm from "../views/cards/DeckForm";
 import DeckList from "../views/cards/DeckList";
+import DeckView from "../views/cards/DeckView";
+import ProtectedRoute from "./ProtectedRoute";
+import Unauthorized from "../views/core/Unauthorized";
+import AuthenticatedRoute from "./AuthenticatedRoute";
 
 
 
 
 
 const AppRoutes = () => {
-
-    const { isAuthenticated } = useAuth();
-
     return (
         <Routes>
             
             <Route path="/login" element={ <Login /> } />
             <Route path="/register" element={ <Register /> } />
+            <Route path="/unauthorized" element={ <Unauthorized /> } />
 
-            {isAuthenticated ? (
+            <Route element={<AuthenticatedRoute /> } >
                 <Route element={<Layout />}>
-                    
-                    
                     <Route path="/" element={<Home />} />
 
-                    <Route path="/users" element={ <UserList /> } />
+                    {/* solo para admin (rol admin = 1) */}
+                    <Route element={<ProtectedRoute allowedRoles={[1]} />}>
+                        <Route path="/users" element={ <UserList /> } />
+                    </Route>
 
-                    {/* Chequear el rol. debe ser admin o organizador  */}
-                    <Route path="/users/new" element={ <UserForm /> } />
-
-
-                    <Route path="/decks/new" element={ <DeckForm /> } />
-                    <Route path="/decks" element={ <DeckList /> } />
-
+                    {/* solo para player (rol player = 4) */}
+                    {/* Ver si permito todos los roles aca */}
+                    <Route element={<ProtectedRoute allowedRoles={[4]} />}>
+                        <Route path="/decks/new" element={ <DeckForm /> } />
+                        <Route path="/decks/:deckId" element={ <DeckView /> } />
+                        <Route path="/decks" element={ <DeckList /> } />
+                    </Route>
                     <Route path="/cards" element={ <CardList /> } />
-
 
                     <Route path="*" element={ <NotFound /> } />
 
                 </Route>
-            ) : (
-                <Route path="*" element={<Navigate to="/login" replace />} />
-            )}
+            </Route>
 
             <Route path="*" element={ <NotFound /> } />
 

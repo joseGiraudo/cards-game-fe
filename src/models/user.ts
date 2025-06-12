@@ -8,7 +8,7 @@ export interface User {
     password: string;
     countryId: number;
     avatar: string;
-    role: UserRole | number;
+    role: number;
 }
 
 export interface UserDTO {

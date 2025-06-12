@@ -65,6 +65,15 @@ export const getPlayerDecks = async (): Promise<Deck[]> => {
   }
 }
 
+export const getPlayerDeckCards = async (deckId: number | string): Promise<Deck> => {
+
+  try {
+    const response = await api.get<Deck>(`/decks/${deckId}`)
+    return response.data
+  } catch (error) {
+    throw handleApiError(error, "error al obtener el mazo del jugador");    
+  }
+}
 
 
 export const createDeck = async (deckData: CreateDeckDTO): Promise<void> => {

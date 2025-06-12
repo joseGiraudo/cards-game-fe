@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import React, { useEffect, useState } from "react";
 import { Alert, Box, Button, Container, Link, Paper, TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { clearError, login } from "../store/slices/authSlice";
-import type { AppDispatch, RootState } from '../store/store';
+import { clearError, login } from "../../store/slices/authSlice";
+import type { AppDispatch, RootState } from '../../store/store';
 
 
 const Login = () => {

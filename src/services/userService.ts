@@ -32,8 +32,36 @@ export const registerPlayer = async (playerData: UserDTO): Promise<User> => {
 
 export const createUser = async (userData: UserDTO): Promise<User> => {
   
-  const response = await api.post<User>('/users', userData);
+  try {
+    const response = await api.post<User>('/users', userData);
   
-  console.log("Registro de usuario: ", response);
-  return response.data;
+    console.log("Registro de usuario: ", response);
+    return response.data;
+  } catch (error) {
+    throw handleApiError(error, "Error al actualizar el usuario")
+  }
+}
+
+export const updateUser = async (id: number, userData: UserDTO): Promise<User> => {
+  
+  try {
+    const response = await api.put<User>(`/users/${id}`, userData);
+    
+    console.log("Actualizar usuario: ", response);
+    return response.data;
+  } catch (error) {
+    throw handleApiError(error, "Error al actualizar el usuario")
+  }
+}
+
+export const deleteUser = async (id: number): Promise<string> => {
+  
+  try {
+    const response = await api.delete<string>(`/users/${id}`);
+    
+    console.log("Actualizar usuario: ", response);
+    return response.data;
+  } catch (error) {
+    throw handleApiError(error, "Error al eliminar el usuario")
+  }
 }

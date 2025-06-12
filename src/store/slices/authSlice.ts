@@ -7,7 +7,7 @@ interface AuthUser {
     username: string;
     email: string;
     avatar: string;
-    role: string | number;
+    role: number;
 }
 
 interface AuthState {

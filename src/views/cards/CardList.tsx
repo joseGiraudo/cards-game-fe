@@ -29,7 +29,7 @@ const CardList = () => {
     
     <Grid container>
         {cards.map(card => (
-            <Grid key={card.id} size={4} >
+            <Grid key={card.id} size={{ xs:12, sm:6, md:4, lg:3}} >
                 <CardItem card={card} />
             </Grid>
         ))}

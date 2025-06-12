@@ -3,8 +3,8 @@
 import type React from "react"
 
 import { useEffect, useState, type ChangeEvent } from "react"
-import type { UserDTO } from "../models/user"
-import { registerPlayer } from "../services/userService"
+import type { UserDTO } from "../../models/user"
+import { registerPlayer } from "../../services/userService"
 import {
   Alert,
   Box,
@@ -23,7 +23,7 @@ import {
   Typography,
 } from "@mui/material"
 import { SportsEsports } from "@mui/icons-material"
-import { type Country, getCountries } from "../services/countryService"
+import { type Country, getCountries } from "../../services/countryService"
 import type { SelectChangeEvent } from "@mui/material"
 
 const Register = () => {
