@@ -12,13 +12,30 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../store/store';
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../store/slices/authSlice';
+import { useEffect, useState } from 'react';
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const adminPages = [
+  { label: 'Cards', path: '/cards' },
+  { label: 'Users', path: '/users' },
+  { label: 'Tournaments', path: '/tournaments' },
+];
+const userPages = [
+  { label: 'Cards', path: '/cards' },
+  { label: 'Decks', path: '/decks'},
+  { label: 'Tournaments', path: '/tournaments' },
+];
+
+
+const settings = ['Profile', 'Decks', 'Logout'];
 
 const Navbar = () => {
+
+
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -38,7 +55,26 @@ const Navbar = () => {
   };
 
 
+  const navigate = useNavigate();
   const { user } = useSelector((state: RootState) => state.auth)
+  const dispatch = useDispatch();
+
+  const [pages, setPages] = useState<{label: string, path: string}[]>([]);
+
+  useEffect(() => {
+    if (user?.role === 1) {
+      setPages(adminPages);
+    } else if (user?.role) {
+      setPages(userPages)
+    }
+  }, [user])
+  
+
+  // manejo del logout
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/login');
+  };
 
 
   return (
@@ -50,7 +86,7 @@ const Navbar = () => {
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            onClick={() => {navigate('/')}}
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -59,9 +95,10 @@ const Navbar = () => {
               letterSpacing: '.3rem',
               color: 'inherit',
               textDecoration: 'none',
+              cursor: 'pointer',
             }}
           >
-            LOGO
+            CGame
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -92,8 +129,8 @@ const Navbar = () => {
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
+                <MenuItem key={page.label} onClick={ () => {handleCloseNavMenu(); navigate(page.path);}}>
+                  <Typography sx={{ textAlign: 'center' }}>{page.label}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -115,16 +152,19 @@ const Navbar = () => {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            Cards Game
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
-                key={page}
-                onClick={handleCloseNavMenu}
+                key={page.label}
+                onClick={() => {
+                  handleCloseNavMenu();
+                  navigate(page.path);
+                }}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page}
+                {page.label}
               </Button>
             ))}
           </Box>
@@ -151,7 +191,17 @@ const Navbar = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting}
+                  onClick={() => {
+                    handleCloseUserMenu();
+                    if (setting === 'Logout') {
+                      handleLogout();
+                    } else {
+                      // Opcional: navegar o manejar otros settings
+                    }
+                  }}
+                >
                   <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
                 </MenuItem>
               ))}
