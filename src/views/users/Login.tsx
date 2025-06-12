@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useAuth } from "../../hooks/useAuth";
 import React, { useEffect, useState } from "react";
-import { Alert, Box, Button, Container, Link, Paper, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Container, Divider, Link, Paper, TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { clearError, login } from "../../store/slices/authSlice";
 import type { AppDispatch, RootState } from '../../store/store';
@@ -52,7 +52,9 @@ const Login = () => {
     return (
         <Container maxWidth="sm" >
             <Paper elevation={3} sx={{p: 4, mt:8}} >
-                <Typography variant="h5" gutterBottom>
+                <Typography variant="h6" sx={{m:3, textAlign: 'center'}}>Campeonato de Cartas 2025</Typography>
+                <Divider />
+                <Typography variant="h5" gutterBottom sx={{my:2}}>
                     Iniciar Sesión
                 </Typography>
 
