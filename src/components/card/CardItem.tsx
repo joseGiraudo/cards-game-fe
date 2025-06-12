@@ -31,7 +31,7 @@ const CardItem: React.FC<Props> = ({ card }) => {
         sx={{
           borderTopLeftRadius: 16,
           borderTopRightRadius: 16,
-          objectFit: 'cover',
+          objectFit: 'contain',
         }}
       />
       <CardContent>
